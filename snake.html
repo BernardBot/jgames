@@ -1,0 +1,49 @@
+<canvas></canvas>
+<script>
+  c = document.getElementsByTagName("canvas")[0];
+  ctx = c.getContext("2d");
+  c.style.border = "1px solid black";
+
+  s = 10;
+  d = [s, 0];
+  p = [[10, 100]];
+  a = [40, 100];
+
+  setInterval(() => {
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      h = [p[0][0] + d[0], p[0][1] + d[1]];
+
+      if (0 > h[0] || h[0] >= c.width ||
+	  0 > h[1] || h[1] >= c.height) {
+	  alert("GAME OVER");
+      }
+
+      for (b of p) {
+	  if (b[0] == h[0] && b[1] == h[1]) {
+	      alert("GAME OVER");
+	  }
+      }
+
+      p.unshift(h);
+      t = p.pop();
+
+      if (a[0] == h[0] && a[1] == h[1]) {
+	  p.push(t);
+	  a = [s * Math.floor(Math.random() * c.width / s),
+	       s * Math.floor(Math.random() * c.height / s)];
+      }
+
+      ctx.fillRect(a[0], a[1], s, s);
+      for (b of p) {
+	  ctx.fillRect(b[0], b[1], s, s);
+      }
+  }, 100);
+
+  document.addEventListener("keydown", (key) => {
+      if (key.key == "w") d = [0, -s];
+      if (key.key == "s") d = [0, s];
+      if (key.key == "a") d = [-s, 0];
+      if (key.key == "d") d = [s, 0];
+  });
+</script>
