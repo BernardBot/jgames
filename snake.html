@@ -5,18 +5,18 @@
 
   s = 10; z = s - 1;
   n = 15;
-  x = 1, y = 10;
-  dx = 1, dy = 0;
-  ax = 4, ay = 10;
+  x = 10, y = 100;
+  dx = s, dy = 0;
+  ax = 40, ay = 100;
   ts = [];
 
-  c.width = c.height = n * s;
+  c.width = c.height = l = s * n;
 
   setInterval(() => {
       ts.unshift({x, y});
 
-      x = (x + dx + n) % n;
-      y = (y + dy + n) % n;
+      x = (x + dx + l) % l;
+      y = (y + dy + l) % l;
 
       for (t of ts) if (x == t.x && y == t.y) ts = [];
 
@@ -24,28 +24,28 @@
 
       if (x == ax && y == ay) {
 	  ts.push(t);
-	  ax = Math.floor(Math.random() * n);
-	  ay = Math.floor(Math.random() * n);
+	  ax = s * Math.floor(Math.random() * n);
+	  ay = s * Math.floor(Math.random() * n);
       }
 
       ctx.fillStyle = "yellow";
-      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.fillRect(0, 0, l, l);
 
       ctx.fillStyle = "green";
-      ctx.fillRect(x * s, y * s, z, z);
+      ctx.fillRect(x, y, z, z);
 
       ctx.fillStyle = "orange";
-      for (t of ts) ctx.fillRect(t.x * s, t.y * s, z, z);
+      for (t of ts) ctx.fillRect(t.x, t.y, z, z);
 
       ctx.fillStyle = "red";
-      ctx.fillRect(ax * s, ay * s, z, z);
+      ctx.fillRect(ax, ay, z, z);
   }, 100);
 
   document.addEventListener("keydown", (key) => {
-      if (key.key == "w") dx =  0, dy = -1;
-      if (key.key == "s") dx =  0, dy =  1;
-      if (key.key == "a") dx = -1, dy =  0;
-      if (key.key == "d") dx =  1, dy =  0;
+      if (key.key == "w") dx =  0, dy = -s;
+      if (key.key == "s") dx =  0, dy =  s;
+      if (key.key == "a") dx = -s, dy =  0;
+      if (key.key == "d") dx =  s, dy =  0;
   });
 </script>
 
