@@ -2,48 +2,58 @@
 <script>
   c = document.getElementsByTagName("canvas")[0];
   ctx = c.getContext("2d");
-  c.style.border = "1px solid black";
 
-  s = 10;
-  d = [s, 0];
-  p = [[10, 100]];
-  a = [40, 100];
+  s = 10; z = s - 1;
+  n = 15;
+  x = 1, y = 10;
+  dx = 1, dy = 0;
+  ax = 4, ay = 10;
+  ts = [];
+
+  c.width = c.height = (n + 1) * s;
 
   setInterval(() => {
-      ctx.clearRect(0, 0, c.width, c.height);
+      ts.unshift({x, y});
 
-      h = [p[0][0] + d[0], p[0][1] + d[1]];
+      x += dx;
+      y += dy;
 
-      if (0 > h[0] || h[0] >= c.width ||
-	  0 > h[1] || h[1] >= c.height) {
-	  alert("GAME OVER");
-      }
-
-      for (b of p) {
-	  if (b[0] == h[0] && b[1] == h[1]) {
-	      alert("GAME OVER");
+      if (x < 0) x = n;
+      if (x > n) x = 0;
+      if (y < 0) y = n;
+      if (y > n) y = 0;
+      
+      for (t of ts) {
+	  if (x == t.x && y == t.y) {
+	      ts = [];
 	  }
       }
 
-      p.unshift(h);
-      t = p.pop();
-
-      if (a[0] == h[0] && a[1] == h[1]) {
-	  p.push(t);
-	  a = [s * Math.floor(Math.random() * c.width / s),
-	       s * Math.floor(Math.random() * c.height / s)];
+      t = ts.pop();
+      if (x == ax && y == ay) {
+	  ts.push(t);
+	  ax = Math.round(Math.random() * n);
+	  ay = Math.round(Math.random() * n);
       }
 
-      ctx.fillRect(a[0], a[1], s, s);
-      for (b of p) {
-	  ctx.fillRect(b[0], b[1], s, s);
-      }
+      ctx.fillStyle = "yellow";
+      ctx.fillRect(0, 0, c.width, c.height);
+
+      ctx.fillStyle = "green";
+      ctx.fillRect(x * s, y * s, z, z);
+
+      ctx.fillStyle = "orange";
+      for (t of ts) ctx.fillRect(t.x * s, t.y * s, z, z);
+
+      ctx.fillStyle = "red";
+      ctx.fillRect(ax * s, ay * s, z, z);
   }, 100);
 
   document.addEventListener("keydown", (key) => {
-      if (key.key == "w") d = [0, -s];
-      if (key.key == "s") d = [0, s];
-      if (key.key == "a") d = [-s, 0];
-      if (key.key == "d") d = [s, 0];
+      if (key.key == "w") dx =  0, dy = -1;
+      if (key.key == "s") dx =  0, dy =  1;
+      if (key.key == "a") dx = -1, dy =  0;
+      if (key.key == "d") dx =  1, dy =  0;
   });
 </script>
+
