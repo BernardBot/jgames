@@ -21,10 +21,11 @@
       for (t of ts) if (x == t.x && y == t.y) ts = [];
 
       t = ts.pop();
+
       if (x == ax && y == ay) {
 	  ts.push(t);
-	  ax = Math.round(Math.random() * n);
-	  ay = Math.round(Math.random() * n);
+	  ax = Math.floor(Math.random() * n);
+	  ay = Math.floor(Math.random() * n);
       }
 
       ctx.fillStyle = "yellow";
