@@ -10,24 +10,15 @@
   ax = 4, ay = 10;
   ts = [];
 
-  c.width = c.height = (n + 1) * s;
+  c.width = c.height = n * s;
 
   setInterval(() => {
       ts.unshift({x, y});
 
-      x += dx;
-      y += dy;
+      x = (x + dx + n) % n;
+      y = (y + dy + n) % n;
 
-      if (x < 0) x = n;
-      if (x > n) x = 0;
-      if (y < 0) y = n;
-      if (y > n) y = 0;
-      
-      for (t of ts) {
-	  if (x == t.x && y == t.y) {
-	      ts = [];
-	  }
-      }
+      for (t of ts) if (x == t.x && y == t.y) ts = [];
 
       t = ts.pop();
       if (x == ax && y == ay) {
