@@ -8,14 +8,16 @@
 
   canvas.width = canvas.height = S * N;
 
+  EMPTY = 0, SNAKE = 1, APPLE = 2;
+
   G = [];
   for (i = 0; i < N; i++) {
       G[i] = [];
       for (j = 0; j < N; j++) {
-	  G[i][j] = 0;
+	  G[i][j] = EMPTY;
       }
   }
-  G[6][3] = 2;
+  G[6][3] = APPLE;
 
   x = 3, y = 3;
   dx = 1, dy = 0;
@@ -23,7 +25,10 @@
   T = [];
   l = 5;
 
-  colormap = ["grey", "green", "red"]
+  colormap = [];
+  colormap[EMPTY] = "grey";
+  colormap[SNAKE] = "green";
+  colormap[APPLE] = "red";
 
   function draw() {
       for (i = 0; i < N; i++) {
@@ -38,23 +43,24 @@
       x = (x + dx + N) % N;
       y = (y + dy + N) % N;
 
-      if (G[x][y] == 1) {
+      if (G[x][y] == SNAKE) {
 	  l = 5;
-      } else if (G[x][y] == 2) {
+      } else if (G[x][y] == APPLE) {
 	  l++;
 	  do {
 	      ax = Math.floor(N * Math.random());
 	      ay = Math.floor(N * Math.random());
 	  } while (G[ax][ay]);
-	  G[ax][ay] = 2;
+	  G[ax][ay] = APPLE;
       }
 
       T.push([x, y]);
       while (T.length > l) {
 	  t = T.shift();
-	  G[t[0]][t[1]] = 0;
+	  G[t[0]][t[1]] = EMPTY;
       }
-      G[x][y] = 1;
+      
+      G[x][y] = SNAKE;
   }
 
   function update() {
@@ -71,3 +77,4 @@
       if (key.key == "d") dx =  1, dy =  0;
   });
 </script>
+
