@@ -1,51 +1,73 @@
 <canvas></canvas>
 <script>
-  c = document.getElementsByTagName("canvas")[0];
-  ctx = c.getContext("2d");
+  canvas = document.querySelector("canvas");
+  ctx = canvas.getContext("2d");
 
-  s = 10; z = s - 1;
-  n = 15;
-  x = 10, y = 100;
-  dx = s, dy = 0;
-  ax = 40, ay = 100;
-  ts = [];
+  S = 30;
+  N = 15;
 
-  c.width = c.height = l = s * n;
+  canvas.width = canvas.height = S * N;
 
-  setInterval(() => {
-      ts.unshift({x, y});
+  G = [];
+  for (i = 0; i < N; i++) {
+      G[i] = [];
+      for (j = 0; j < N; j++) {
+	  G[i][j] = 0;
+      }
+  }
+  G[6][3] = 2;
 
-      x = (x + dx + l) % l;
-      y = (y + dy + l) % l;
+  x = 3, y = 3;
+  dx = 1, dy = 0;
 
-      for (t of ts) if (x == t.x && y == t.y) ts = [];
+  T = [];
+  l = 5;
 
-      t = ts.pop();
+  colormap = ["grey", "green", "red"]
 
-      if (x == ax && y == ay) {
-	  ts.push(t);
-	  ax = s * Math.floor(Math.random() * n);
-	  ay = s * Math.floor(Math.random() * n);
+  function draw() {
+      for (i = 0; i < N; i++) {
+	  for (j = 0; j < N; j++) {
+	      ctx.fillStyle = colormap[G[i][j]];
+	      ctx.fillRect(S * i, S * j, S, S);
+	  }
+      }
+  }
+
+  function logic() {
+      x = (x + dx + N) % N;
+      y = (y + dy + N) % N;
+
+      if (G[x][y] == 1) {
+	  l = 5;
+      } else if (G[x][y] == 2) {
+	  l++;
+	  do {
+	      ax = Math.floor(N * Math.random());
+	      ay = Math.floor(N * Math.random());
+	  } while (G[ax][ay]);
+	  G[ax][ay] = 2;
       }
 
-      ctx.fillStyle = "yellow";
-      ctx.fillRect(0, 0, l, l);
+      T.push([x, y]);
+      while (T.length > l) {
+	  t = T.shift();
+	  G[t[0]][t[1]] = 0;
+      }
+      G[x][y] = 1;
+  }
 
-      ctx.fillStyle = "green";
-      ctx.fillRect(x, y, z, z);
+  function update() {
+      logic();
+      draw();
+  }
 
-      ctx.fillStyle = "orange";
-      for (t of ts) ctx.fillRect(t.x, t.y, z, z);
+  setInterval(update, 100);
 
-      ctx.fillStyle = "red";
-      ctx.fillRect(ax, ay, z, z);
-  }, 100);
-
-  document.addEventListener("keydown", (key) => {
-      if (key.key == "w") dx =  0, dy = -s;
-      if (key.key == "s") dx =  0, dy =  s;
-      if (key.key == "a") dx = -s, dy =  0;
-      if (key.key == "d") dx =  s, dy =  0;
+  document.addEventListener("keydown", function(key) {
+      if (key.key == "w") dx =  0, dy = -1;
+      if (key.key == "s") dx =  0, dy =  1;
+      if (key.key == "a") dx = -1, dy =  0;
+      if (key.key == "d") dx =  1, dy =  0;
   });
 </script>
-
